@@ -11,12 +11,12 @@ app.use(express.json())
 app.use(cors())
 
 // routes
-app.use('/api/tasks', tasks)
+app.use('/api/tasks', tasks as any)
 
 const port = process.env.PORT || 3000
 const start = async () => {
   try {
-    await connectDB(process.env.MONGO_URI)
+    await connectDB(process.env.MONGO_URI as string)
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}`)
     })
