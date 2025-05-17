@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import connectDB from './db/connect.js'
 import tasks from './routes/tasks.js'
+import notFound from './middleware/not-found.js'
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(cors())
 
 // routes
 app.use('/api/tasks', tasks as any)
+app.use(notFound)
 
 const port = process.env.PORT || 3000
 const start = async () => {

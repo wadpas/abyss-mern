@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 
 import Task from '../models/task.js'
 
@@ -26,7 +26,7 @@ export const getTask = async (req: Request, res: Response): Promise<any> => {
     const task = await Task.findOne({ _id: taskId })
 
     if (!task) {
-      return res.status(404).json({ error: 'Task not found' })
+      return res.status(404).json({ error: `Task with id ${taskId} not found` })
     }
 
     res.status(200).json({ task })
@@ -36,9 +36,34 @@ export const getTask = async (req: Request, res: Response): Promise<any> => {
 }
 
 export const updateTask = async (req: Request, res: Response): Promise<any> => {
-  res.send('update task')
+  try {
+    const taskId = req.params.id
+    const task = await Task.findOne({ _id: taskId })
+
+    if (!task) {
+      return res.status(404).json({ error: `Task with id ${taskId} not found` })
+    }
+
+    const updatedTask = await Task.findOneAndUpdate({ _id: taskId }, req.body, {
+      new: true,
+      runValidators: true,
+    })
+
+    res.status(200).json({ task: updatedTask })
+  } catch (error) {}
 }
 
 export const deleteTask = async (req: Request, res: Response): Promise<any> => {
-  res.send('delete task')
+  try {
+    const taskId = req.params.id
+    const task = await Task.findOneAndDelete({ _id: taskId })
+
+    if (!task) {
+      return res.status(404).json({ error: `Task with id ${taskId} not found` })
+    }
+
+    res.status(200).json({ task })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
 }
