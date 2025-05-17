@@ -2,11 +2,16 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import connectDB from './db/connect.js'
+import tasks from './routes/tasks.js'
 
 const app = express()
 
+// middleware
 app.use(express.json())
 app.use(cors())
+
+// routes
+app.use('/api/tasks', tasks)
 
 const port = process.env.PORT || 3000
 const start = async () => {
