@@ -1,3 +1,4 @@
+import 'express-async-errors'
 import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
@@ -16,7 +17,7 @@ app.use(express.json())
 app.use(cors())
 
 // routes
-app.use('/api/tasks', authMiddleware, jobs)
+app.use('/api/jobs', authMiddleware, jobs)
 app.use('/api/auth', auth)
 app.use(notFound)
 app.use(errorHandler as any)
