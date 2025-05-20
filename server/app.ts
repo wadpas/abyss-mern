@@ -7,7 +7,7 @@ import jobs from './routes/jobs.js'
 import auth from './routes/auth.js'
 import notFound from './middleware/not-found.js'
 import errorHandler from './middleware/error-handler.js'
-import authMiddleware from './middleware/auth.js'
+import authMiddleware from './middleware/authentication.js'
 
 dotenv.config()
 const app = express()
@@ -17,8 +17,8 @@ app.use(express.json())
 app.use(cors())
 
 // routes
-app.use('/api/jobs', authMiddleware, jobs)
 app.use('/api/auth', auth)
+app.use('/api/jobs', authMiddleware, jobs)
 app.use(notFound)
 app.use(errorHandler as any)
 
