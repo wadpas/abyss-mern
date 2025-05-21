@@ -4,30 +4,36 @@ const jobSchema = new mongoose.Schema(
   {
     company: {
       type: String,
-      required: [true, 'Please provide a company name'],
-      maxlength: [40, 'Name cannot be more than 20 characters'],
-      trim: true,
+      required: [true, 'Please provide company name'],
+      maxlength: 50,
     },
     position: {
       type: String,
-      required: [true, 'Please provide a position name'],
-      maxlength: [120, 'Name cannot be more than 20 characters'],
-      trim: true,
+      required: [true, 'Please provide position'],
+      maxlength: 100,
     },
     status: {
       type: String,
-      enum: ['interview', 'provide', 'pending'],
+      enum: ['interview', 'declined', 'pending'],
       default: 'pending',
     },
     createdBy: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
-      required: [true, 'Please provide a user'],
+      required: [true, 'Please provide user'],
+    },
+    jobType: {
+      type: String,
+      enum: ['full-time', 'part-time', 'remote', 'internship'],
+      default: 'full-time',
+    },
+    jobLocation: {
+      type: String,
+      default: 'my city',
+      required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 )
 
 export default mongoose.model('Job', jobSchema)

@@ -1,9 +1,7 @@
-import { Request, Response, NextFunction } from 'express'
-import jwt from 'jsonwebtoken'
+import { Request, Response } from 'express'
 import StatusCodes from 'http-status-codes'
-import BadRequestError from '../errors/bad-request.js'
-import UnauthenticatedError from '../errors/unauthenticated.js'
 import User from '../models/user.js'
+import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body
@@ -25,11 +23,11 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const token = user.createJWT()
-  res.status(StatusCodes.OK).json({ token })
+  res.status(StatusCodes.OK).json({ user, token })
 }
 
 export const register = async (req: Request, res: Response) => {
   const user = await User.create(req.body)
   const token = user.createJWT()
-  res.status(StatusCodes.CREATED).send({ token })
+  res.status(StatusCodes.CREATED).send({ user, token })
 }

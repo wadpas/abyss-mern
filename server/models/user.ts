@@ -6,6 +6,8 @@ interface IUser extends Document {
   email: string
   password: string
   name: string
+  lastName: string
+  location: string
   createJWT(): string
   comparePassword(candidatePassword: string): Promise<boolean>
 }
@@ -32,6 +34,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide password'],
       minlength: 6,
+    },
+    lastName: {
+      type: String,
+      minlength: [3, 'Last name must be at least 3 characters'],
+      maxlength: [20, 'Last name cannot be more than 20 characters'],
+      trim: true,
+      default: 'undefined',
+    },
+    location: {
+      type: String,
+      trim: true,
+      default: 'undefined',
     },
   },
   {
