@@ -25,7 +25,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const token = user.createJWT()
-  res.status(StatusCodes.OK).json(token)
+  res.status(StatusCodes.OK).json({ token })
 }
 
 export const register = async (req: Request, res: Response) => {
