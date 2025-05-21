@@ -1,16 +1,6 @@
-import mongoose, { model, Document } from 'mongoose'
+import mongoose from 'mongoose'
+import validator from 'validator'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-
-interface IUser extends Document {
-  email: string
-  password: string
-  name: string
-  lastName: string
-  location: string
-  createJWT(): string
-  comparePassword(candidatePassword: string): Promise<boolean>
-}
 
 const UserSchema = new mongoose.Schema(
   {
@@ -21,31 +11,25 @@ const UserSchema = new mongoose.Schema(
       maxlength: [20, 'Name cannot be more than 20 characters'],
       trim: true,
     },
+    //@ts-ignore
     email: {
       type: String,
-      required: [true, 'Please provide email'],
-      match: [
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        'Please provide a valid email',
-      ],
       unique: true,
+      required: [true, 'Please provide email'],
+      validate: {
+        validator: validator.isEmail,
+        message: 'Please provide valid email',
+      },
     },
     password: {
       type: String,
       required: [true, 'Please provide password'],
       minlength: 6,
     },
-    lastName: {
+    role: {
       type: String,
-      minlength: [3, 'Last name must be at least 3 characters'],
-      maxlength: [20, 'Last name cannot be more than 20 characters'],
-      trim: true,
-      default: 'undefined',
-    },
-    location: {
-      type: String,
-      trim: true,
-      default: 'undefined',
+      enum: ['user', 'admin'],
+      default: 'user',
     },
   },
   {
@@ -58,17 +42,9 @@ UserSchema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, salt)
 })
 
-UserSchema.methods.createJWT = function () {
-  return jwt.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET as string, {
-    expiresIn: '30d',
-  })
-}
-
 UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
   const isMatch = await bcrypt.compare(candidatePassword, this.password)
   return isMatch
 }
 
-const User = model<IUser>('User', UserSchema)
-
-export default User
+export default mongoose.model('User', UserSchema)
