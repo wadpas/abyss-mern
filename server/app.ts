@@ -9,8 +9,9 @@ import jobs from './routes/jobs.js'
 import users from './routes/users.js'
 import notFound from './middleware/not-found.js'
 import errorHandler from './middleware/error-handler.js'
-import { authentication } from './middleware/auth.js'
 import cookieParser from 'cookie-parser'
+import fileUpload from 'express-fileupload'
+import products from './routes/products.js'
 
 dotenv.config()
 const app = express()
@@ -20,11 +21,14 @@ app.use(morgan('tiny'))
 app.use(express.json())
 app.use(cookieParser('cookieParser'))
 app.use(cors())
+app.use(express.static('./public'))
+app.use(fileUpload())
 
 // routes
 app.use('/api/auth', auth)
-app.use('/api/jobs', authentication, jobs)
-app.use('/api/users', authentication, users)
+app.use('/api/users', users)
+app.use('/api/jobs', jobs)
+app.use('/api/products', products)
 app.use(notFound)
 app.use(errorHandler as any)
 

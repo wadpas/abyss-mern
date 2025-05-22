@@ -1,5 +1,4 @@
 import { Response } from 'express'
-import StatusCodes from 'http-status-codes'
 import { BadRequestError, NotFoundError } from '../errors/index.js'
 import Job from '../models/job.js'
 
@@ -52,7 +51,7 @@ export const getJobs = async (req: any, res: Response): Promise<any> => {
   const totalJobs = await Job.countDocuments(queryObject)
   const numOfPages = Math.ceil(totalJobs / limit)
 
-  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages })
+  res.status(200).json({ jobs, totalJobs, numOfPages })
 }
 
 export const getJob = async (req: any, res: Response): Promise<any> => {
@@ -67,13 +66,13 @@ export const getJob = async (req: any, res: Response): Promise<any> => {
     throw new NotFoundError(`No job with id ${jobId}`)
   }
 
-  res.status(StatusCodes.OK).json({ job })
+  res.status(200).json({ job })
 }
 
 export const createJob = async (req: any, res: Response): Promise<any> => {
   req.body.createdBy = req.user.userId
   const job = await Job.create(req.body)
-  res.status(StatusCodes.CREATED).json({ job })
+  res.status(201).json({ job })
 }
 
 export const updateJob = async (req: any, res: Response): Promise<any> => {
@@ -91,7 +90,7 @@ export const updateJob = async (req: any, res: Response): Promise<any> => {
     throw new NotFoundError(`No job with id ${jobId}`)
   }
 
-  res.status(StatusCodes.OK).json({ job })
+  res.status(200).json({ job })
 }
 
 export const deleteJob = async (req: any, res: Response): Promise<any> => {
@@ -106,5 +105,5 @@ export const deleteJob = async (req: any, res: Response): Promise<any> => {
     throw new NotFoundError(`No job with id ${jobId}`)
   }
 
-  res.status(StatusCodes.OK).json({ job })
+  res.status(200).json({ job })
 }
