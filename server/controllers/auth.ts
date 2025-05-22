@@ -2,16 +2,16 @@ import { Request, Response } from 'express'
 import StatusCodes from 'http-status-codes'
 import User from '../models/user.js'
 import { BadRequestError, UnauthenticatedError } from '../errors/index.js'
-import { createTokenUser, attachCookiesToResponse } from '../utils/jwt.js'
+import { createTokenUser, attachCookiesToResponse } from '../utils/auth.js'
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<any> => {
   const user = await User.create(req.body)
   const tokenUser = createTokenUser(user)
   attachCookiesToResponse(res, tokenUser)
   res.status(StatusCodes.CREATED).json({ tokenUser })
 }
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = req.body
   if (!email || !password) {
     throw new BadRequestError('Please provide email and password')
@@ -33,6 +33,10 @@ export const login = async (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({ user: tokenUser })
 }
 
-export const logout = async (req: Request, res: Response) => {
+export const logout = async (req: Request, res: Response): Promise<any> => {
+  res.cookie('token', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000),
+  })
   res.status(StatusCodes.OK).json({ msg: 'user logged out!' })
 }

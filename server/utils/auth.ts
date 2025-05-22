@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { Response } from 'express'
+import { UnauthorizedError } from '../errors/index.js'
 
 const createJWT = (payload: any) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET as any, {
@@ -11,7 +12,7 @@ const createJWT = (payload: any) => {
 const isTokenValid = (token: any) => jwt.verify(token, process.env.JWT_SECRET as any)
 
 const attachCookiesToResponse = (res: Response, user: any) => {
-  const token = createJWT({ payload: user })
+  const token = createJWT(user)
 
   const oneDay = 1000 * 60 * 60 * 24
 
@@ -27,4 +28,10 @@ const createTokenUser = (user: any) => {
   return { name: user.name, userId: user._id, role: user.role }
 }
 
-export { createJWT, isTokenValid, attachCookiesToResponse, createTokenUser }
+const checkPermissions = (requestUser: any, resourceUserId: any) => {
+  if (requestUser.role === 'admin') return
+  if (requestUser.userId === resourceUserId.toString()) return
+  throw new UnauthorizedError('Not authorized to access this route')
+}
+
+export { createJWT, isTokenValid, attachCookiesToResponse, createTokenUser, checkPermissions }
