@@ -7,6 +7,7 @@ import connectDB from './db/connect.js'
 import auth from './routes/auth.js'
 import jobs from './routes/jobs.js'
 import users from './routes/users.js'
+import reviews from './routes/reviews.js'
 import notFound from './middleware/not-found.js'
 import errorHandler from './middleware/error-handler.js'
 import cookieParser from 'cookie-parser'
@@ -29,6 +30,7 @@ app.use('/api/auth', auth)
 app.use('/api/users', users)
 app.use('/api/jobs', jobs)
 app.use('/api/products', products)
+app.use('/api/reviews', reviews)
 app.use(notFound)
 app.use(errorHandler as any)
 
