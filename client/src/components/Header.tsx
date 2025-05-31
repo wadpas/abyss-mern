@@ -8,7 +8,7 @@ const Header = () => {
       <div className='container flex items-center justify-between mx-auto text-card'>
         <Link
           to='/'
-          className='text-xl font-bold md:text-2xl'>
+          className='text-2xl tracking-tight md:text-3xl'>
           ABYSS
         </Link>
         <div className='md:hidden'>
