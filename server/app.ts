@@ -1,3 +1,4 @@
+import 'express-async-errors'
 import dotenv from 'dotenv'
 import express from 'express'
 import morgan from 'morgan'
@@ -33,7 +34,7 @@ app.use('/api/reviews', reviews)
 app.use(notFound)
 app.use(errorHandler as any)
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 3000
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI as string)

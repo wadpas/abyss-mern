@@ -3,12 +3,14 @@ import User from '../models/user.js'
 import { attachCookiesToResponse, createTokenUser, checkPermissions } from '../utils/auth.js'
 import APIError from '../utils/api-error.js'
 
-export const getUsers = async (req: Request, res: Response): Promise<any> => {
+// @desc Fetch all users
+const getUsers = async (req: Request, res: Response): Promise<any> => {
   const users = await User.find({ role: 'user' }).select('-password')
   res.status(200).json({ users })
 }
 
-export const getUser = async (req: any, res: Response): Promise<any> => {
+// @desc Fetch single user by ID
+const getUser = async (req: any, res: Response): Promise<any> => {
   const user = await User.findOne({ _id: req.params.id }).select('-password')
   if (!user) {
     throw new APIError(`No user with id ${req.params.id}`, 404)
@@ -17,11 +19,27 @@ export const getUser = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ user })
 }
 
-export const getCurrentUser = async (req: any, res: Response): Promise<any> => {
+// @desc Retrieve user from token
+const getCurrentUser = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ user: req.user })
 }
 
-export const updateUser = async (req: any, res: Response): Promise<any> => {
+// @desc Create user
+const createUser = async (req: Request, res: Response): Promise<any> => {
+  const { auth0Id } = req.body
+  const existingUser = await User.findOne({ auth0Id }).select('-password')
+
+  if (existingUser) {
+    res.status(200).json({ user: existingUser })
+  } else {
+    const user = await User.create(req.body)
+    user.password = ''
+    res.status(201).json({ user })
+  }
+}
+
+// @desc Update user
+const updateUser = async (req: any, res: Response): Promise<any> => {
   const { email, name } = req.body
   if (!email || !name) {
     throw new APIError('Please provide all values', 400)
@@ -41,7 +59,8 @@ export const updateUser = async (req: any, res: Response): Promise<any> => {
   res.status(200).json(tokenUser)
 }
 
-export const updateUserPassword = async (req: any, res: Response): Promise<any> => {
+// @desc Update user password
+const updateUserPassword = async (req: any, res: Response): Promise<any> => {
   const { oldPassword, newPassword } = req.body
   if (!oldPassword || !newPassword) {
     throw new APIError('Please provide both values', 400)
@@ -52,7 +71,6 @@ export const updateUserPassword = async (req: any, res: Response): Promise<any> 
   if (!user) {
     throw new APIError(`No user with id ${req.user.userId}`, 404)
   }
-
   //@ts-ignore
   const isPasswordCorrect = await user.comparePassword(oldPassword)
   if (!isPasswordCorrect) {
@@ -63,3 +81,5 @@ export const updateUserPassword = async (req: any, res: Response): Promise<any> 
   await user.save()
   res.status(200).json({ msg: 'Success! Password Updated.' })
 }
+
+export { getUsers, getUser, getCurrentUser, createUser, updateUser, updateUserPassword }

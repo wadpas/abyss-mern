@@ -4,11 +4,15 @@ import bcrypt from 'bcryptjs'
 
 const userSchema = new mongoose.Schema(
   {
+    auth0Id: {
+      type: String,
+      required: [true, 'Please provide auth0Id'],
+    },
     name: {
       type: String,
       required: [true, 'Please provide a name'],
       minlength: [3, 'Name must be at least 3 characters'],
-      maxlength: [20, 'Name cannot be more than 20 characters'],
+      maxlength: [50, 'Name cannot be more than 50 characters'],
       trim: true,
     },
     //@ts-ignore
@@ -21,10 +25,28 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide valid email',
       },
     },
+    address: {
+      type: String,
+      minlength: [5, 'Address must be at least 5 characters'],
+      maxlength: [100, 'Address cannot be more than 100 characters'],
+      trim: true,
+    },
+    city: {
+      type: String,
+      minlength: [2, 'City name must be at least 2 characters'],
+      maxlength: [50, 'City name cannot be more than 50 characters'],
+      trim: true,
+    },
+    country: {
+      type: String,
+      minlength: [3, 'Country name must be at least 3 characters'],
+      maxlength: [50, 'Country name cannot be more than 50 characters'],
+      trim: true,
+    },
     password: {
       type: String,
-      required: [true, 'Please provide password'],
       minlength: 6,
+      default: 'password',
     },
     role: {
       type: String,

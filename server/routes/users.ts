@@ -1,10 +1,10 @@
 import express from 'express'
-import { getUsers, getUser, getCurrentUser, updateUser, updateUserPassword } from '../controllers/users.js'
+import { getUsers, getUser, getCurrentUser, createUser, updateUser, updateUserPassword } from '../controllers/users.js'
 import { authentication, authorization } from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.route('/').get(authentication, authorization('admin'), getUsers)
+router.route('/').get(authentication, authorization('admin'), getUsers).post(authentication, createUser)
 router.route('/me').get(authentication, getCurrentUser)
 router.route('/update-user').patch(authentication, updateUser)
 router.route('/update-password').patch(authentication, updateUserPassword)

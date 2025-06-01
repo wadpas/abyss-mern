@@ -5,8 +5,9 @@ import APIError from '../utils/api-error.js'
 export const authentication = async (req: any, res: Response, next: NextFunction) => {
   const token = req.signedCookies.token
 
+  // console.log(token)
+
   if (!token) {
-    console.log('token')
     throw new APIError('Authentication Invalid', 401)
   }
 
