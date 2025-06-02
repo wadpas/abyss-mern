@@ -8,11 +8,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide auth0Id'],
     },
-    name: {
+    username: {
       type: String,
-      required: [true, 'Please provide a name'],
-      minlength: [3, 'Name must be at least 3 characters'],
-      maxlength: [50, 'Name cannot be more than 50 characters'],
+      required: [true, 'Please provide a username'],
+      minlength: [3, 'Username must be at least 3 characters'],
+      maxlength: [50, 'Username cannot be more than 50 characters'],
       trim: true,
     },
     //@ts-ignore
@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema(
         validator: validator.isEmail,
         message: 'Please provide valid email',
       },
+    },
+    name: {
+      type: String,
+      minlength: [3, 'Name must be at least 3 characters'],
+      maxlength: [50, 'Name cannot be more than 50 characters'],
+      trim: true,
     },
     address: {
       type: String,

@@ -4,19 +4,19 @@ import APIError from '../utils/api-error.js'
 
 export const authentication = async (req: any, res: Response, next: NextFunction) => {
   const token = req.signedCookies.token
-
+  next()
   // console.log(token)
 
-  if (!token) {
-    throw new APIError('Authentication Invalid', 401)
-  }
+  // if (!token) {
+  //   throw new APIError('Authentication Invalid', 401)
+  // }
 
-  try {
-    req.user = isTokenValid(token) as any
-    next()
-  } catch (error) {
-    throw new APIError('Authentication Invalid', 401)
-  }
+  // try {
+  //   req.user = isTokenValid(token) as any
+  //   next()
+  // } catch (error) {
+  //   throw new APIError('Authentication Invalid', 401)
+  // }
 }
 
 export const authorization = (...roles: any[]): any => {

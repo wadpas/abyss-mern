@@ -1,6 +1,9 @@
+import { useCreateUser } from '@/api/user'
 import { Auth0Provider, User, type AppState } from '@auth0/auth0-react'
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { createUser } = useCreateUser()
+
   const domain = import.meta.env.VITE_AUTH0_DOMAIN
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID
   const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI
@@ -10,7 +13,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const onRedirectCallback = (appState?: AppState, user?: User) => {
-    console.log(user, appState)
+    if (user?.sub && user?.email && user?.name)
+      createUser({
+        auth0Id: user.sub,
+        username: user.name,
+        email: user.email,
+      })
   }
 
   return (
