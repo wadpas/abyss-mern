@@ -40,23 +40,24 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
 
 // @desc Update user
 const updateUser = async (req: any, res: Response): Promise<any> => {
-  const { email, name } = req.body
-  if (!email || !name) {
-    throw new APIError('Please provide all values', 400)
-  }
-  const user = await User.findOne({ _id: req.user.userId })
+  const { username, name, address, city, country } = req.body
+
+  const user = await User.findOne({ _id: req.userId })
 
   if (!user) {
-    throw new APIError(`No user with id ${req.user.userId}`, 404)
+    throw new APIError(`No user with id ${req.user}`, 404)
   }
 
-  user.email = email
+  user.username = username
   user.name = name
+  user.address = address
+  user.city = city
+  user.country = country
 
   await user.save()
-  const tokenUser = createTokenUser(user)
-  attachCookiesToResponse(res, tokenUser)
-  res.status(200).json(tokenUser)
+  // const tokenUser = createTokenUser(user)
+  // attachCookiesToResponse(res, tokenUser)
+  res.status(200).json({ user })
 }
 
 // @desc Update user password
