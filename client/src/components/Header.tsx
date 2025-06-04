@@ -4,8 +4,8 @@ import MainNav from './MainNav'
 
 const Header = () => {
   return (
-    <div className='p-3 shadow bg-chart-5'>
-      <div className='container flex items-center justify-between mx-auto text-card'>
+    <div className=' shadow bg-chart-5'>
+      <div className='container px-4 py-3 flex items-center justify-between mx-auto text-card'>
         <Link
           to='/'
           className='text-2xl tracking-tight md:text-3xl'>
