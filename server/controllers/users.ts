@@ -21,7 +21,11 @@ const getUser = async (req: any, res: Response): Promise<any> => {
 
 // @desc Retrieve user from token
 const getCurrentUser = async (req: any, res: Response): Promise<any> => {
-  res.status(200).json({ user: req.user })
+  const user = await User.findOne({ _id: req.userId }).select('-password')
+  if (!user) {
+    throw new APIError(`No user with id ${req.userId}`, 404)
+  }
+  res.status(200).json({ user })
 }
 
 // @desc Create user
@@ -67,10 +71,10 @@ const updateUserPassword = async (req: any, res: Response): Promise<any> => {
     throw new APIError('Please provide both values', 400)
   }
 
-  const user = await User.findOne({ _id: req.user.userId })
+  const user = await User.findOne({ _id: req.userId })
 
   if (!user) {
-    throw new APIError(`No user with id ${req.user.userId}`, 404)
+    throw new APIError(`No user with id ${req.userId}`, 404)
   }
   //@ts-ignore
   const isPasswordCorrect = await user.comparePassword(oldPassword)
