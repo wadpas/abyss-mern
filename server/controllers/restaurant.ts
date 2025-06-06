@@ -1,8 +1,8 @@
 import { Response } from 'express'
-import Job from '../models/job.js'
+import Restaurant from '../models/restaurant.js'
 import APIError from '../utils/api-error.js'
 
-export const getJobs = async (req: any, res: Response): Promise<any> => {
+export const getRestaurants = async (req: any, res: Response): Promise<any> => {
   const { search, status, jobType, sort } = req.query
 
   interface queryObjectType {
@@ -25,7 +25,7 @@ export const getJobs = async (req: any, res: Response): Promise<any> => {
   if (jobType && jobType !== 'all') {
     queryObject.jobType = jobType
   }
-  let result = Job.find(queryObject)
+  let result = Restaurant.find(queryObject)
 
   if (sort === 'latest') {
     result = result.sort('-createdAt')
@@ -48,19 +48,19 @@ export const getJobs = async (req: any, res: Response): Promise<any> => {
 
   const jobs = await result
 
-  const totalJobs = await Job.countDocuments(queryObject)
-  const numOfPages = Math.ceil(totalJobs / limit)
+  const totalRestaurants = await Restaurant.countDocuments(queryObject)
+  const numOfPages = Math.ceil(totalRestaurants / limit)
 
-  res.status(200).json({ jobs, totalJobs, numOfPages })
+  res.status(200).json({ jobs, totalRestaurants, numOfPages })
 }
 
-export const getJob = async (req: any, res: Response): Promise<any> => {
+export const getRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
   } = req
 
-  const job = await Job.findOne({ _id: jobId, createdBy: userId })
+  const job = await Restaurant.findOne({ _id: jobId, createdBy: userId })
 
   if (!job) {
     throw new APIError(`No job with id ${jobId}`, 404)
@@ -69,19 +69,19 @@ export const getJob = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ job })
 }
 
-export const createJob = async (req: any, res: Response): Promise<any> => {
+export const createRestaurant = async (req: any, res: Response): Promise<any> => {
   req.body.createdBy = req.user.userId
-  const job = await Job.create(req.body)
+  const job = await Restaurant.create(req.body)
   res.status(201).json({ job })
 }
 
-export const updateJob = async (req: any, res: Response): Promise<any> => {
+export const updateRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
   } = req
 
-  const job = await Job.findOneAndUpdate({ _id: jobId, createdBy: userId }, req.body, {
+  const job = await Restaurant.findOneAndUpdate({ _id: jobId, createdBy: userId }, req.body, {
     new: true,
     runValidators: true,
   })
@@ -93,13 +93,13 @@ export const updateJob = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ job })
 }
 
-export const deleteJob = async (req: any, res: Response): Promise<any> => {
+export const deleteRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
   } = req
 
-  const job = await Job.findOneAndDelete({ _id: jobId, createdBy: userId })
+  const job = await Restaurant.findOneAndDelete({ _id: jobId, createdBy: userId })
 
   if (!job) {
     throw new APIError(`No job with id ${jobId}`, 404)

@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import cors from 'cors'
 import connectDB from './db/connect.js'
 import auth from './routes/auth.js'
-import jobs from './routes/jobs.js'
+import jobs from './routes/restaurants.js'
 import users from './routes/users.js'
 import reviews from './routes/reviews.js'
 import notFound from './middleware/not-found.js'
@@ -13,6 +13,7 @@ import errorHandler from './middleware/error-handler.js'
 import cookieParser from 'cookie-parser'
 import fileUpload from 'express-fileupload'
 import products from './routes/products.js'
+import { v2 as cloudinary } from 'cloudinary'
 
 dotenv.config()
 const app = express()
@@ -24,8 +25,8 @@ app.use(express.static('./public'))
 app.use(cookieParser('cookieParser'))
 app.use(cors())
 app.use(fileUpload())
-
 // routes
+
 app.use('/api/auth', auth)
 app.use('/api/users', users)
 app.use('/api/jobs', jobs)
@@ -33,6 +34,12 @@ app.use('/api/products', products)
 app.use('/api/reviews', reviews)
 app.use(notFound)
 app.use(errorHandler as any)
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 const port = process.env.PORT || 3000
 const start = async () => {
