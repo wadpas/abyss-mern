@@ -1,8 +1,10 @@
 import { Response } from 'express'
 import Restaurant from '../models/restaurant.js'
 import APIError from '../utils/api-error.js'
+import cloudinary from 'cloudinary'
+import mongoose from 'mongoose'
 
-export const getRestaurants = async (req: any, res: Response): Promise<any> => {
+const getRestaurants = async (req: any, res: Response): Promise<any> => {
   const { search, status, jobType, sort } = req.query
 
   interface queryObjectType {
@@ -54,7 +56,7 @@ export const getRestaurants = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ jobs, totalRestaurants, numOfPages })
 }
 
-export const getRestaurant = async (req: any, res: Response): Promise<any> => {
+const getRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
@@ -69,13 +71,26 @@ export const getRestaurant = async (req: any, res: Response): Promise<any> => {
   res.status(200).json({ job })
 }
 
-export const createRestaurant = async (req: any, res: Response): Promise<any> => {
-  req.body.createdBy = req.user.userId
-  const job = await Restaurant.create(req.body)
-  res.status(201).json({ job })
+// @desc Create new Restaurant
+const createRestaurant = async (req: any, res: Response): Promise<any> => {
+  const existingRestaurant = await Restaurant.findOne({ user: req.userId })
+
+  if (existingRestaurant) {
+    throw new APIError('User restaurant already exists', 409)
+  }
+
+  const imageUrl = await uploadImage(req.file as Express.Multer.File)
+
+  const restaurant = new Restaurant(req.body)
+  restaurant.imageUrl = imageUrl
+  // @ts-ignore
+  restaurant.user = new mongoose.Types.ObjectId(req.userId)
+  await restaurant.save()
+
+  res.status(201).send({ restaurant })
 }
 
-export const updateRestaurant = async (req: any, res: Response): Promise<any> => {
+const updateRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
@@ -93,7 +108,7 @@ export const updateRestaurant = async (req: any, res: Response): Promise<any> =>
   res.status(200).json({ job })
 }
 
-export const deleteRestaurant = async (req: any, res: Response): Promise<any> => {
+const deleteRestaurant = async (req: any, res: Response): Promise<any> => {
   const {
     user: { userId },
     params: { id: jobId },
@@ -107,3 +122,16 @@ export const deleteRestaurant = async (req: any, res: Response): Promise<any> =>
 
   res.status(200).json({ job })
 }
+
+// @desc Upload image
+const uploadImage = async (file: Express.Multer.File) => {
+  const image = file
+  const base64Image = Buffer.from(image.buffer).toString('base64')
+  const dataURI = `data:${image.mimetype};base64,${base64Image}`
+
+  const uploadResponse = await cloudinary.v2.uploader.upload(dataURI)
+
+  return uploadResponse.url
+}
+
+export { getRestaurants, getRestaurant, createRestaurant, updateRestaurant, deleteRestaurant }

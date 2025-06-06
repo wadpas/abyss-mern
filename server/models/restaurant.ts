@@ -57,10 +57,6 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    lastUpdated: {
-      type: Date,
-      required: true,
-    },
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
