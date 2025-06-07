@@ -17,11 +17,11 @@ export type MenuItem = {
 export type Restaurant = {
   _id: string
   user: string
-  restaurantName: string
+  name: string
   city: string
   country: string
   deliveryPrice: number
-  estimatedDeliveryTime: number
+  deliveryTime: number
   cuisines: string[]
   menuItems: MenuItem[]
   imageUrl: string
