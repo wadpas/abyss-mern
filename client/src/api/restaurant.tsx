@@ -5,6 +5,30 @@ import { toast } from 'sonner'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
+export const useGetRestaurant = () => {
+  const { getAccessTokenSilently } = useAuth0()
+
+  const getRestaurantRequest = async (): Promise<Restaurant> => {
+    const accessToken = await getAccessTokenSilently()
+
+    const response = await fetch(`${API_BASE_URL}/api/restaurants`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to get restaurant')
+    }
+    return response.json()
+  }
+
+  const { data: restaurant, isLoading } = useQuery('fetchRestaurant', getRestaurantRequest)
+
+  return { restaurant, isLoading }
+}
+
 export const useCreateRestaurant = () => {
   const { getAccessTokenSilently } = useAuth0()
 

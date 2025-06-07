@@ -57,18 +57,13 @@ const getRestaurants = async (req: any, res: Response): Promise<any> => {
 }
 
 const getRestaurant = async (req: any, res: Response): Promise<any> => {
-  const {
-    user: { userId },
-    params: { id: jobId },
-  } = req
+  const restaurant = await Restaurant.findOne({ user: req.userId })
 
-  const job = await Restaurant.findOne({ _id: jobId, createdBy: userId })
-
-  if (!job) {
-    throw new APIError(`No job with id ${jobId}`, 404)
+  if (!restaurant) {
+    throw new APIError(`No restaurant with user Id ${req.userId}`, 404)
   }
 
-  res.status(200).json({ job })
+  res.status(200).json(restaurant)
 }
 
 // @desc Create new Restaurant

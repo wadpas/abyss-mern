@@ -1,12 +1,14 @@
-import { useCreateRestaurant } from '@/api/restaurant'
-import ManageRestaurantForm from '@/forms/RestaurantForm'
+import { useCreateRestaurant, useGetRestaurant } from '@/api/restaurant'
+import RestaurantForm from '@/forms/RestaurantForm'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 
 const ManageRestaurantPage = () => {
   const { createRestaurant, isLoading: isCreateLoading } = useCreateRestaurant()
+  const { restaurant } = useGetRestaurant()
 
   return (
-    <ManageRestaurantForm
+    <RestaurantForm
+      restaurant={restaurant}
       onSave={createRestaurant}
       isLoading={isCreateLoading}
     />
