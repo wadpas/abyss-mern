@@ -54,7 +54,6 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
                 <Input
                   {...field}
                   disabled
-                  className='bg-white'
                 />
               </FormControl>
             </FormItem>
@@ -67,10 +66,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className='bg-white'
-                />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,10 +79,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className='bg-white'
-                />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,10 +93,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
               <FormItem className='flex-1'>
                 <FormLabel>Address</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    className='bg-white'
-                  />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,10 +106,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
               <FormItem className='flex-1'>
                 <FormLabel>City</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    className='bg-white'
-                  />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -132,10 +119,7 @@ const UserProfileForm = ({ onSave, isLoading, currentUser }: Props) => {
               <FormItem className='flex-1'>
                 <FormLabel>Country</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    className='bg-white'
-                  />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
