@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form'
 
 const DetailsSection = () => {
   const { control } = useFormContext()
+
   return (
     <div className='space-y-2'>
       <div>
@@ -15,7 +16,7 @@ const DetailsSection = () => {
         name='name'
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Name</FormLabel>
+            <FormLabel></FormLabel>
             <FormControl>
               <Input {...field} />
             </FormControl>

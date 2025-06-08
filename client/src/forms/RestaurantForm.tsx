@@ -1,16 +1,16 @@
 import { Form } from '@/components/ui/form'
-import type { Restaurant } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import z from 'zod'
-import DetailsSection from './components/DetailsSection'
+import { z } from 'zod'
 import { Separator } from '@/components/ui/separator'
-import CuisinesSection from './components/CuisinesSection'
-import MenuSection from './components/MenuSection'
-import ImageSection from './components/ImageSection'
 import LoadingButton from '@/components/LoadingButton'
 import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
+import type { Restaurant } from '@/types'
+import DetailsSection from './components/DetailsSection'
+import MenuSection from './components/MenuSection'
+import ImageSection from './components/ImageSection'
+import CuisinesSection from './components/CuisinesSection'
 
 const formSchema = z
   .object({
@@ -56,7 +56,7 @@ type Props = {
   isLoading: boolean
 }
 
-function RestaurantForm({ onSave, isLoading, restaurant }: Props) {
+const ManageRestaurantForm = ({ onSave, isLoading, restaurant }: Props) => {
   const form = useForm<RestaurantFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,7 +115,7 @@ function RestaurantForm({ onSave, isLoading, restaurant }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-4 bg-primary-foreground rounded-lg md:p-4'>
+        className='space-y-8 bg-gray-50 p-10 rounded-lg'>
         <DetailsSection />
         <Separator />
         <CuisinesSection />
@@ -129,6 +129,4 @@ function RestaurantForm({ onSave, isLoading, restaurant }: Props) {
   )
 }
 
-RestaurantForm.propTypes = {}
-
-export default RestaurantForm
+export default ManageRestaurantForm

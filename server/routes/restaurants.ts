@@ -12,7 +12,11 @@ const upload = multer({
   },
 })
 
-router.route('/').get(authentication, getRestaurant).post(authentication, upload.single('imageFile'), createRestaurant)
-router.route('/:id').patch(authentication, updateRestaurant).delete(authentication, deleteRestaurant)
+router
+  .route('/')
+  .get(authentication, getRestaurant)
+  .post(authentication, upload.single('imageFile'), createRestaurant)
+  .put(authentication, upload.single('imageFile'), updateRestaurant)
+router.route('/:id').delete(authentication, deleteRestaurant)
 
 export default router

@@ -44,6 +44,8 @@ const createUser = async (req: Request, res: Response): Promise<any> => {
 
 // @desc Update user
 const updateUser = async (req: any, res: Response): Promise<any> => {
+  console.log(req.body)
+
   const { username, name, address, city, country } = req.body
 
   const user = await User.findOne({ _id: req.userId })

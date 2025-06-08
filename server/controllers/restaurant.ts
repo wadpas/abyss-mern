@@ -57,6 +57,8 @@ const getRestaurants = async (req: any, res: Response): Promise<any> => {
 }
 
 const getRestaurant = async (req: any, res: Response): Promise<any> => {
+  console.log(req.body)
+
   const restaurant = await Restaurant.findOne({ user: req.userId })
 
   if (!restaurant) {
@@ -68,6 +70,8 @@ const getRestaurant = async (req: any, res: Response): Promise<any> => {
 
 // @desc Create new Restaurant
 const createRestaurant = async (req: any, res: Response): Promise<any> => {
+  console.log(req.body)
+
   const existingRestaurant = await Restaurant.findOne({ user: req.userId })
 
   if (existingRestaurant) {
@@ -86,21 +90,24 @@ const createRestaurant = async (req: any, res: Response): Promise<any> => {
 }
 
 const updateRestaurant = async (req: any, res: Response): Promise<any> => {
-  const {
-    user: { userId },
-    params: { id: jobId },
-  } = req
+  console.log(req.body)
+  const restaurant = await Restaurant.findOne({ user: req.userId })
 
-  const job = await Restaurant.findOneAndUpdate({ _id: jobId, createdBy: userId }, req.body, {
+  if (!restaurant) {
+    throw new APIError(`Restaurant not found`, 404)
+  }
+
+  if (req.file) {
+    const imageUrl = await uploadImage(req.file as Express.Multer.File)
+    restaurant.imageUrl = imageUrl
+  }
+
+  const updatedRestaurant = await Restaurant.findOneAndUpdate({ user: req.userId }, req.body, {
     new: true,
     runValidators: true,
   })
 
-  if (!job) {
-    throw new APIError(`No job with id ${jobId}`, 404)
-  }
-
-  res.status(200).json({ job })
+  res.status(200).json({ updatedRestaurant })
 }
 
 const deleteRestaurant = async (req: any, res: Response): Promise<any> => {
